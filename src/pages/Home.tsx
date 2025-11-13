@@ -6,37 +6,11 @@ import PropertyCard from "@/components/PropertyCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import heroImage from "@/assets/hero-home.jpg";
-import property1 from "@/assets/property-1.jpg";
-import property2 from "@/assets/property-2.jpg";
-import property3 from "@/assets/property-3.jpg";
+import { properties } from "@/data/properties";
 
 const Home = () => {
-  const featuredProperties = [
-    {
-      id: "1",
-      image: property1,
-      name: "Urban Luxury Apartments",
-      location: "Downtown Metropolitan",
-      price: "750,000",
-      description: "Modern luxury living in the heart of the city with stunning views and premium amenities."
-    },
-    {
-      id: "2",
-      image: property2,
-      name: "Suburban Family Haven",
-      location: "Green Valley Estates",
-      price: "580,000",
-      description: "Beautiful two-story home perfect for families, featuring a spacious garden and modern interiors."
-    },
-    {
-      id: "3",
-      image: property3,
-      name: "Coastal Dream Villa",
-      location: "Ocean View Heights",
-      price: "2,850,000",
-      description: "Breathtaking oceanfront property with infinity pool and panoramic views of the coastline."
-    }
-  ];
+  // Featured properties - first 3
+  const featuredProperties = properties.slice(0, 3);
 
   return (
     <div className="min-h-screen flex flex-col">

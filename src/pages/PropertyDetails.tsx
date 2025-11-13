@@ -1,31 +1,26 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Bed, Bath, Car, Ruler, ArrowLeft } from "lucide-react";
+import { MapPin, Bed, Bath, Car, Ruler, ArrowLeft, CheckCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import property3 from "@/assets/property-3.jpg";
-import interior1 from "@/assets/interior-1.jpg";
-import interior2 from "@/assets/interior-2.jpg";
+import { getPropertyById } from "@/data/properties";
 
 const PropertyDetails = () => {
   const { id } = useParams();
+  
+  if (!id) {
+    return <Navigate to="/properties" replace />;
+  }
 
-  // In a real app, you'd fetch this data based on the ID
-  const property = {
-    name: "Coastal Dream Villa",
-    location: "Ocean View Heights, California",
-    price: "2,850,000",
-    description: "Experience unparalleled luxury in this stunning oceanfront villa. This architectural masterpiece seamlessly blends contemporary design with natural beauty, offering breathtaking panoramic views of the Pacific Ocean. The property features floor-to-ceiling windows that flood the space with natural light, an infinity pool that appears to merge with the horizon, and expansive outdoor living areas perfect for entertaining. Every detail has been carefully curated to create a sanctuary of sophistication and tranquility.",
-    bedrooms: 5,
-    bathrooms: 4,
-    parking: 3,
-    area: "4,500 sq ft",
-    images: [property3, interior1, interior2, property3, interior1, interior2]
-  };
+  const property = getPropertyById(id);
+
+  if (!property) {
+    return <Navigate to="/properties" replace />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -35,7 +30,7 @@ const PropertyDetails = () => {
       <section 
         className="relative h-[500px] flex items-end"
         style={{
-          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2)), url(${property3})`,
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2)), url(${property.image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
@@ -68,7 +63,7 @@ const PropertyDetails = () => {
 
                 <h2 className="text-2xl font-bold mb-4">Property Description</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  {property.description}
+                  {property.fullDescription}
                 </p>
               </div>
 
@@ -76,7 +71,7 @@ const PropertyDetails = () => {
               <Card className="mb-8">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold mb-4">Property Features</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
                     <div className="flex flex-col items-center text-center">
                       <div className="bg-accent/10 p-3 rounded-full mb-2">
                         <Bed className="h-6 w-6 text-accent" />
@@ -106,6 +101,18 @@ const PropertyDetails = () => {
                       <span className="text-sm text-muted-foreground">Area</span>
                     </div>
                   </div>
+
+                  <div className="border-t pt-6">
+                    <h4 className="font-semibold mb-4">Key Features</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {property.features.map((feature, index) => (
+                        <div key={index} className="flex items-start gap-2">
+                          <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -117,7 +124,7 @@ const PropertyDetails = () => {
                     <div key={index} className="aspect-[4/3] overflow-hidden rounded-lg">
                       <img 
                         src={image} 
-                        alt={`Property view ${index + 1}`}
+                        alt={`${property.name} view ${index + 1}`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -148,7 +155,7 @@ const PropertyDetails = () => {
                       <Label htmlFor="message">Message</Label>
                       <Textarea 
                         id="message" 
-                        placeholder="I'm interested in this property..."
+                        placeholder={`I'm interested in ${property.name}...`}
                         rows={4}
                       />
                     </div>
